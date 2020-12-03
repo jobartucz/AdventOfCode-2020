@@ -24,9 +24,9 @@ def find2020():
             for k in nums:
                 if i + j + k == 2020:
                     print(i*j*k)
-                    return
+                    # return
 
-    if True == False:
+    if True == True:
         i = 0
         j = len(nums) - 1
 
@@ -34,7 +34,7 @@ def find2020():
             if nums[i] + nums[j] == 2020:
                 print(nums[i]*nums[j])
                 return
-            if i + j < 2020:
+            if nums[i] + nums[j] < 2020:
                 i += 1
             else:
                 j -= 1
