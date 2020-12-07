@@ -1,0 +1,4 @@
+bright white bags contain 1 shiny gold bags.
+muted yellow bags contain 1 shiny gold bags, 1 wavy gold bags, 1 vibrant brown bags.
+dark orange bags contain 1 bright white bags, 1 muted yellow bags.
+light red bags contain 1 bright white bags, 1 muted yellow bags.
