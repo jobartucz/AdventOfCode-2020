@@ -1,7 +1,7 @@
 
 with open("day13.txt", "r") as f:
     starttime = int(f.readline())
-    buses = [x for x in f.readline().split(',')]
+    buses = f.readline().split(',')
 
 times = {}
 for i, b in enumerate(buses):
@@ -15,10 +15,11 @@ starttime = 0
 while found == False:
 
     found = True
+    # print(starttime)
     for time, delay in times.items():
         if (starttime + delay) % time != 0:
             found = False
-            starttime += int(buses[0])
+            starttime += 17
             break
 
 if found == True:
