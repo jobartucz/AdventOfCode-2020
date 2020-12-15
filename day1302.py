@@ -1,5 +1,5 @@
 
-with open("day13.txt", "r") as f:
+with open("day13test.txt", "r") as f:
     starttime = int(f.readline())
     buses = f.readline().split(',')
 
@@ -12,11 +12,13 @@ print(times)
 
 found = False
 starttime = 0
-while found == False:
+adder = 0
+for time, delay in times.items():
+    adder += time
+    while starttime + :
 
     found = True
     # print(starttime)
-    for time, delay in times.items():
         if (starttime + delay) % time != 0:
             found = False
             starttime += 17
