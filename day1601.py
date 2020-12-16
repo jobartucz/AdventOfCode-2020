@@ -1,49 +1,27 @@
 
-numlist = {}
-
-def writemem(addr, mask, start, val):
-    global numlist
-
-    newbval = addr[0:start]
-
-    for i in range(start, 36):
-        a = addr[i]
-        m = mask[i]
-
-        if m == '0':
-            newbval += a
-        elif m == '1':
-            newbval += '1'
-        else:
-            writemem(newbval + '0' + addr[i+1:], mask, i + 1, val)
-            writemem(newbval + '1' + addr[i+1:], mask, i + 1, val)
-            return
-
-    numlist[int(newbval,2)] = val
-
-    return
-
-with open("day14.txt", "r") as f:
-    mask = ''
+nums = set()
+bads = 0
+with open("day16.txt", "r") as f:
     for line in f:
-        if line[:4] == 'mask':
-                blah, mask = line.split(' = ')
-        else:
-            addr, val = line.split(' = ')
-            addr = int(addr[addr.index('[') + 1 : addr.index(']')])
-            val = int(val)
 
-            # print(line, addr, val)
-            baddr = bin(addr)[2:]
+        if line[0:4] == "your":
+            yourticket = f.readline()
+            continue
 
-            for i in range(36-len(baddr)):
-                baddr = '0' + baddr
+        if ":" in line and line[-2] != ':':
+            type, ranges = line.split(': ')
+            r1, r2 = ranges.split(' or ')
+            r11, r12 = r1.split('-')
+            r21, r22 = r2.split('-')
+            for i in range(int(r11),int(r12) + 1):
+                nums.add(i)
+            for i in range(int(r21),int(r22) + 1):
+                nums.add(i)
 
-            writemem(baddr, mask, 0, val)
+        if "," in line:
+            fields = [int(x) for x in line.split(",")]
+            for i in fields:
+                if i not in nums:
+                    bads += i
 
-sum = 0
-for i in numlist.values():
-    # print(i)
-    sum += i
-
-print(sum)
+print(bads)
