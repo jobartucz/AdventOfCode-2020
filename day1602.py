@@ -73,8 +73,8 @@ for k,v in notpossible.items():
 # print(possibilities)
 
 
+# keep removing the ones that have only 1 possibility from the other sets
 dones = {}
-
 while (len(dones) < len(possibilities)):
     todo = []
     for k, v in possibilities.items():
@@ -89,6 +89,7 @@ while (len(dones) < len(possibilities)):
 
 print(dones)
 
+# finally, calculate the product
 product = 1
 for k, v in dones.items():
     if k[:9] == 'departure':
