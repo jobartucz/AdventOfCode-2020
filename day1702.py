@@ -11,13 +11,38 @@ with open("day17.txt", "r") as f:
 
 print(universe)
 
+def findminmax(universe):
+    minx, miny, minz, minw = 9999999,9999999,9999999,9999999
+    maxx, maxy, maxz, maxw = -9999999,-9999999,-9999999,-9999999
+    for (i,j,k,l) in universe.keys():
+        if i < minx:
+            minx = i
+        if j < miny:
+            miny = j
+        if k < minz:
+            minz = k
+        if l < minw:
+            minw = l
+        if i > maxx:
+            maxx = i
+        if j > maxy:
+            maxy = j
+        if k > maxz:
+            maxz = k
+        if l > maxw:
+            maxw = l
+
+    return (minx, miny, minz, minw, maxx, maxy, maxz, maxw)
+
 def shuffle(universe, iteration):
     newuniverse = DefaultDict(bool)
 
-    for a in range(0-iteration,8+iteration):
-        for b in range(0-iteration,8+iteration):
-            for c in range(0-iteration,8+iteration):
-                for d in range(0-iteration,8+iteration):
+    (minx,miny,minz,minw,maxx,maxy,maxz,maxw) = findminmax(universe)
+
+    for a in range(minx-1,maxx+2):
+        for b in range(miny-1,maxy+2):
+            for c in range(minz-1,maxz+2):
+                for d in range(minw-1,maxw+2):
                     numtrue = 0
                     for i in range(-1,2):
                         for j in range(-1,2):
@@ -37,21 +62,8 @@ def shuffle(universe, iteration):
     return newuniverse
 
 def printu(universe, extracounter):
-    minx, miny, minz = 9999999,9999999,9999999
-    maxx, maxy, maxz = -9999999,-9999999,-9999999
-    for (i,j,k,l) in universe.keys():
-        if i < minx:
-            minx = i
-        if j < miny:
-            miny = j
-        if k < minz:
-            minz = k
-        if i > maxx:
-            maxx = i
-        if j > maxy:
-            maxy = j
-        if k > maxz:
-            maxz = k
+
+    (minx,miny,minz,minw,maxx,maxy,maxz,maxw) = findminmax(universe)
 
     print('')
     print(minx,miny,minz,maxx,maxy,maxz)
