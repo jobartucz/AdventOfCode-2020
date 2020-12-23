@@ -29,14 +29,19 @@ with open("day21.txt", "r") as f:
         all_ingredients = all_ingredients.union(ing)
         # print(ingall, "\n", done_ingredients, "\n")
 
-for k, v in ingall.items():
-    if len(v) > 1:
-        ingall[k] = v - done_ingredients
-        if len(ingall[k]) == 1:
-            done_ingredients = done_ingredients.union(ingall[k])
-            done_allergens.add(k)
+old = -1
+new = 0
+while old != new:
+    old = new
+    for k, v in ingall.items():
+        if len(v) > 1:
+            ingall[k] = v - done_ingredients
+            if len(ingall[k]) == 1:
+                done_ingredients = done_ingredients.union(ingall[k])
+                done_allergens.add(k)
+    new = len(done_allergens)
 
-# print("ingall: ", ingall, "\ndone_i: ", done_ingredients, "\n")
+print("ingall: ", ingall, "\ndone_i: ", done_ingredients, "\n")
 
 possibilities = set()
 for k, v in ingall.items():
