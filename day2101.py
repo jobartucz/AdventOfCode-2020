@@ -1,37 +1,47 @@
 
 ingall = {}
-notingall = {}
 ingredient_lines = []
+allergen_lines = []
 all_ingredients = set()
-with open("day21test.txt", "r") as f:
+all_allergens = set()
+done_ingredients = set()
+with open("day21.txt", "r") as f:
     for line in f:
         ing, all = line.strip().split(" (contains ")
-        ing = ing.split()
+        ing = set(ing.split())
         ingredient_lines.append(ing)
         all = set([x.strip() for x in all.strip(")").split(',')])
-        print(ing, all)
-        for i in ing:
-            all_ingredients.add(i)
-            if i not in ingall:
-                ingall[i] = all
-                notingall[i] = set()
-            else:
-                notingall[i] = notingall[i].union(ingall[i] ^ all)
-                ingall[i] = ingall[i].intersection(all)
+        allergen_lines.append(all)
+        # print(ing, all)
+
         for a in all:
-            for i in all_ingredients:
-                if i not in ing:
-                    notingall[i].add(a)
-                    ingall[i].discard(a)
+            if a not in ingall:
+                ingall[a] = ing
+            else:
+                ingall[a] = ingall[a].intersection(ing)
 
+            if len(ingall[a]) == 1:
+                done_ingredients = done_ingredients.union(ingall[a])
 
-        print(ingall)
-        print(notingall)
-        print()
+        all_allergens = all_allergens.union(all)
+        all_ingredients = all_ingredients.union(ing)
+        # print(ingall, "\n", done_ingredients, "\n")
 
-nonallergens = []
 for k, v in ingall.items():
-    if len(v) == 0:
-        nonallergens.append(k)
+    if len(v) > 1:
+        ingall[k] = v - done_ingredients
+        if len(ingall[k]) == 1:
+            done_ingredients = done_ingredients.union(ingall[k])
 
-print(nonallergens)
+# print("ingall: ", ingall, "\ndone_i: ", done_ingredients, "\n")
+
+possibilities = set()
+for k, v in ingall.items():
+    possibilities = possibilities.union(v)
+
+notpossible = all_ingredients - possibilities
+counter = 0
+for il in ingredient_lines:
+    counter += len(il.intersection(notpossible))
+
+print(counter)
