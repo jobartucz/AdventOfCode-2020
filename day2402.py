@@ -33,4 +33,33 @@ for l in lines:
     else:
         blacks.add((x,y))
 
-print(len(blacks))
+newblacks = set()
+def checkwhite(x,y):
+    global blacks, newblacks
+    sum = 0
+    if (x,y) in newblacks:
+        return
+    for (a,b) in [(x-1,y),(x+1,y),(x,y-1),(x+1,y-1),(x-1,y+1),(x,y+1)]:
+        if (a,b) in blacks:
+            sum += 1
+    if sum == 2:
+        newblacks.add((x,y))
+
+def checkblack(x,y):
+    global blacks, newblacks
+    sum = 0
+    for (a,b) in [(x-1,y),(x+1,y),(x,y-1),(x+1,y-1),(x-1,y+1),(x,y+1)]:
+        if (a,b) in blacks:
+            sum += 1
+        else:
+            checkwhite(a,b)
+    if sum == 0 or sum > 2:
+        newblacks.remove((x,y))
+
+
+for i in range(101):
+    print(f"{i}: {len(blacks)}")
+    newblacks = set(blacks)
+    for (x,y) in blacks:
+        checkblack(x,y)
+    blacks = newblacks
