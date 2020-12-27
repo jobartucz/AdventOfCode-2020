@@ -3,7 +3,7 @@ rules = {}
 lines = []
 dones = set()
 maxlen = 0
-with open("day1902.txt", "r") as f:
+with open("day19test.txt", "r") as f:
     for line in f:
         if len(line) > 2 and line.find(":") > 0:
             num, rule = line.strip().split(': ')
@@ -23,8 +23,21 @@ with open("day1902.txt", "r") as f:
                 maxlen = len(line)
 
 print(rules)
+exp8, exp11 = 0,0
 def expand_rule(num):
     global rules
+    global exp8, exp11
+
+    if num == 8:
+        if exp8 >= 4:
+            return expand_rule(42)
+        else:
+            exp8 += 1
+    elif num == 11:
+        if exp11 >= 3:
+            return expand_rule(42) + expand_rule(31)
+        else:
+            exp11 += 1
 
     if num in dones:
         return rules[num]
@@ -44,13 +57,9 @@ def expand_rule(num):
             tmp = g
             if second:
                 for h in second:
-                    if len(tmp + h) > maxlen:
-                        continue
                     tmp += h
                     if third:
                         for i in third:
-                            if len(tmp + i) > maxlen:
-                                continue
                             tmp += i
                             newrules.append(tmp)
                             tmp = g + h
@@ -63,13 +72,12 @@ def expand_rule(num):
     rules[num] = newrules
 
     dones.add(num)
+
     return rules[num]
 
 
-for i,r in enumerate(rules):
+for i in rules.keys():
     expand_rule(i)
-
-# print(rules)
 
 num0 = 0
 for l in lines:
