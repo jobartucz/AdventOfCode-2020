@@ -16,16 +16,20 @@ def trans(sub, loop):
 
 
 subc = 7
-loopc = 1
-while trans(subc, loopc) != ck:
+ans = 1
+loopc = 0
+while ans != ck:
     loopc += 1
+    ans = (ans * subc) % 20201227
 
 print(f"ck loop: {loopc}")
 
 subd = 7
-loopd = 1
-while trans(subd, loopd) != dk:
+loopd = 0
+ans = 1
+while ans != dk:
     loopd += 1
+    ans = (ans * subd) % 20201227
 
 print(f"dk loop: {loopd}")
 
