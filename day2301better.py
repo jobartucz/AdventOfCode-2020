@@ -12,7 +12,7 @@ def printfinalcups(nums):
     for i in range(9):
         s += str(current)
         current = nums[current]
-    
+
     print(s)
 
 cups = []
