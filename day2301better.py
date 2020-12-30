@@ -7,42 +7,29 @@ def printcups(current, nums):
     print()
 
 def printfinalcups(nums):
-
     current = nums[1]
     s = ""
     for i in range(9):
         s += str(current)
         current = nums[current]
-
+    
     print(s)
-
-    print(nums[1], nums[nums[1]])
-    print(nums[1] * nums[nums[1]])
-
 
 cups = []
 for c in "739862541":
     cups.append(int(c))
-for i in range(10,1000001):
-    cups.append(i)
 
-print(cups[:15])
-
-nums = []
-for i in range(1000001):
-    nums.append(0)
-
+nums = [0,0,0,0,0,0,0,0,0,0]
 for i, n in enumerate(cups):
-    if i == 999999:
+    if i == 8:
         nums[n] = cups[0]
     else:
         nums[n] = cups[i+1]
 
-print(nums[0:20])
 current = cups[0]
-# printcups(current, nums)
+printcups(current, nums)
 
-for i in range(10000000):
+for i in range(100):
 
     next = nums[current]
     nextnext = nums[next]
@@ -52,11 +39,11 @@ for i in range(10000000):
 
     dest = current - 1
     if dest == 0:
-        dest = 1000000
+        dest = 9
     while dest == next or dest == nextnext or dest == nextnextnext:
         dest -= 1
         if dest == 0:
-            dest = 1000000
+            dest = 9
 
     # print(f"dest: {dest}")
 
@@ -72,5 +59,5 @@ for i in range(10000000):
 
     # printcups(current, nums)
 
-# print(nums)
+print(nums)
 printfinalcups(nums)
