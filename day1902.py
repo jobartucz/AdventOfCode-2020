@@ -2,8 +2,7 @@
 rules = {}
 lines = []
 dones = set()
-maxlen = 0
-with open("day19test.txt", "r") as f:
+with open("day19.txt", "r") as f:
     for line in f:
         if len(line) > 2 and line.find(":") > 0:
             num, rule = line.strip().split(': ')
@@ -17,27 +16,11 @@ with open("day19test.txt", "r") as f:
                 tmp = [x.strip().split(' ') for x in rule.split('|')]
                 rules[int(num)] = [[int(x) for x in y] for y in tmp]
         elif len(line) > 1:
-            line = line.strip()
-            lines.append(line)
-            if len(line) > maxlen:
-                maxlen = len(line)
+            lines.append(line.strip())
 
-print(rules)
-exp8, exp11 = 0,0
+# print(rules)
 def expand_rule(num):
     global rules
-    global exp8, exp11
-
-    if num == 8:
-        if exp8 >= 4:
-            return expand_rule(42)
-        else:
-            exp8 += 1
-    elif num == 11:
-        if exp11 >= 3:
-            return expand_rule(42) + expand_rule(31)
-        else:
-            exp11 += 1
 
     if num in dones:
         return rules[num]
@@ -48,9 +31,6 @@ def expand_rule(num):
         second = ""
         if len(r) > 1:
             second = expand_rule(r[1])
-        third = ""
-        if len(r) > 2:
-            third = expand_rule(r[2])
 
         tmp = ""
         for g in first:
@@ -58,13 +38,7 @@ def expand_rule(num):
             if second:
                 for h in second:
                     tmp += h
-                    if third:
-                        for i in third:
-                            tmp += i
-                            newrules.append(tmp)
-                            tmp = g + h
-                    else:
-                        newrules.append(tmp)
+                    newrules.append(tmp)
                     tmp = g
             else:
                 newrules.append(tmp)
@@ -72,16 +46,63 @@ def expand_rule(num):
     rules[num] = newrules
 
     dones.add(num)
-
     return rules[num]
 
+expand_rule(42)
+expand_rule(31)
 
-for i in rules.keys():
-    expand_rule(i)
+print(len(lines))
+chars = len(rules[42][0])
+for l in list(lines):
+    if len(l) % chars != 0:
+        # print("++++++++++++++++++++++++++++++++++++")
+        lines.remove(l)
+        continue
 
-num0 = 0
-for l in lines:
-    if l in rules[0]:
-        num0 += 1
+    if l[:chars] not in rules[42] or l[chars:chars + chars] not in rules[42] or l[-1*chars:] not in rules[31]:
+        # print("-------------------------------------")
+        lines.remove(l)
+        continue
 
-print(num0)
+    num42s = 0
+    num31s = 0
+
+    fortytwos = True
+    remove = False
+    s = ''
+    for i in range(0,len(l),chars):
+        if fortytwos == True:
+            if l[i:i+chars] in rules[42]:
+                num42s += 1
+                s += "42_"
+                continue
+            elif l[i:i+chars] in rules[31]:
+                s += "31_"
+                num31s += 1
+                fortytwos = False
+            else:
+                s += l[i:i+chars] + " not 42 or 31 when it should be"
+                remove = True
+                break
+        elif l[i:i+chars] not in rules[31]:
+            s += l[i:i+chars] + " not 31 when it should be"
+            remove = True
+            break
+        else:
+            s += "31_"
+            num31s += 1
+
+    if remove == True:
+        # print(s + " ------------ REMOVED")
+        lines.remove(l)
+    elif num31s == 0 or num31s >= num42s:
+        # print(s + "BAD31REMOVED")
+        lines.remove(l)
+    # else:
+        # print(f"KEPT: {num42s} {num31s}")
+
+print()
+#for l in lines:
+#    print(l)
+
+print(len(lines))

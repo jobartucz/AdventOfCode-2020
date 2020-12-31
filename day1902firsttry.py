@@ -2,7 +2,8 @@
 rules = {}
 lines = []
 dones = set()
-with open("day19.txt", "r") as f:
+maxlen = 0
+with open("day19test.txt", "r") as f:
     for line in f:
         if len(line) > 2 and line.find(":") > 0:
             num, rule = line.strip().split(': ')
@@ -16,11 +17,28 @@ with open("day19.txt", "r") as f:
                 tmp = [x.strip().split(' ') for x in rule.split('|')]
                 rules[int(num)] = [[int(x) for x in y] for y in tmp]
         elif len(line) > 1:
-            lines.append(line.strip())
+            line = line.strip()
+            lines.append(line)
+            if len(line) > maxlen:
+                maxlen = len(line)
 
 print(rules)
+exp8, exp11 = 0, 0
 def expand_rule(num):
     global rules
+    global exp8
+    global exp11
+
+    if num == 8:
+        if exp8 >= 4:
+            return expand_rule(42)
+        else:
+            exp8 += 1
+    elif num == 11:
+        if exp11 >= 3:
+            return expand_rule(42) + expand_rule(31)
+        else:
+            exp11 += 1
 
     if num in dones:
         return rules[num]
@@ -31,6 +49,9 @@ def expand_rule(num):
         second = ""
         if len(r) > 1:
             second = expand_rule(r[1])
+        third = ""
+        if len(r) > 2:
+            third = expand_rule(r[2])
 
         tmp = ""
         for g in first:
@@ -38,7 +59,13 @@ def expand_rule(num):
             if second:
                 for h in second:
                     tmp += h
-                    newrules.append(tmp)
+                    if third:
+                        for i in third:
+                            tmp += i
+                            newrules.append(tmp)
+                            tmp = g + h
+                    else:
+                        newrules.append(tmp)
                     tmp = g
             else:
                 newrules.append(tmp)
@@ -46,17 +73,25 @@ def expand_rule(num):
     rules[num] = newrules
 
     dones.add(num)
+
     return rules[num]
 
 
-#for i,r in enumerate(rules):
+# only need to check rule 0
+# for i in rules.keys():
 #    expand_rule(i)
+
+# don't recurse 8 or 11 the first time
+exp11 = 10
+exp8 = 10
+
 expand_rule(0)
-# print(rules)
+print(rules)
 
 num0 = 0
 for l in lines:
     if l in rules[0]:
         num0 += 1
+        lines.remove(l)
 
 print(num0)
